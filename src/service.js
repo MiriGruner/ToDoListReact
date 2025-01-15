@@ -1,13 +1,11 @@
 import axios from 'axios';
 
 // הגדרת כתובת ה-API כברירת מחדל
-const apiClient = axios.create({
-  baseURL: "https://localhost:5234", // עדכני את ה-port אם צריך
-  timeout: 5000, // הגדרת Timeout של 5 שניות
-});
+axios.defaults.baseURL = process.env.REACT_APP_API;
+const apiUrl = process.env.REACT_APP_API;
 
 // הוספת Interceptor לטיפול בשגיאות
-apiClient.interceptors.response.use(
+apiUrl.interceptors.response.use(
   response => response, // החזרת התשובה במקרה של הצלחה
   error => {
     console.error('API Error:', error.response?.status, error.response?.data);
@@ -19,7 +17,7 @@ const apiService = {
   // שליפת כל המשימות
   getTasks: async () => {
     try {
-      const result = await apiClient.get('/items');
+      const result = await axios.get(`${apiUrl}`);
       return result.data;
     } catch (error) {
       console.error('Failed to fetch tasks', error);
@@ -31,7 +29,7 @@ const apiService = {
   addTask: async (name) => {
     try {
       const newTask = { name, isComplete: false };
-      const result = await apiClient.post('/items', newTask);
+      const result = await axios.post(`${apiUrl}`, newTask);
       return result.data;
     } catch (error) {
       console.error('Failed to add task', error);
@@ -43,7 +41,7 @@ const apiService = {
   setCompleted: async (id, isComplete) => {
     try {
       const updatedTask = { isComplete };
-      const result = await apiClient.put(`/items/${id}`, updatedTask);
+      const result = await axios.put(`${apiUrl}/${id}`, updatedTask);
       return result.data;
     } catch (error) {
       console.error('Failed to update task status', error);
@@ -54,7 +52,7 @@ const apiService = {
   // מחיקת משימה
   deleteTask: async (id) => {
     try {
-      await apiClient.delete(`/items/${id}`);
+      await axios.delete(`${apiUrl}/${id}`);
       return { success: true };
     } catch (error) {
       console.error('Failed to delete task', error);
