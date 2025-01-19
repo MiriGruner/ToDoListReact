@@ -29,5 +29,9 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://localhost:5234"
+  "engines": {
+  "node": ">=14.x",
+  "npm": ">=6.x"
+}
+,  "proxy": "https://localhost:5234"
 }
